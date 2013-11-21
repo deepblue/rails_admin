@@ -8,6 +8,7 @@ module RailsAdmin
 
     layout :get_layout
 
+    before_filter :set_locale
     before_filter :get_model, :except => RailsAdmin::Config::Actions.all(:root).map(&:action_name)
     before_filter :get_object, :only => RailsAdmin::Config::Actions.all(:member).map(&:action_name)
     before_filter :check_for_cancel
@@ -148,6 +149,12 @@ module RailsAdmin
       action = params[:current_action].in?(['create', 'update']) ? params[:current_action] : 'edit'
       @association = source_model_config.send(action).fields.find{|f| f.name == params[:associated_collection].to_sym }.with(:controller => self, :object => source_object)
       @association.associated_collection_scope
+    end
+
+    def set_locale
+      session[:locale] = params[:locale] if params[:locale].present?
+      session[:locale] = 'ko' unless %w(ko en ja).include?(session[:locale])
+      I18n.locale = session[:locale] || 'ko'
     end
   end
 end
