@@ -152,9 +152,7 @@ module RailsAdmin
     end
 
     def set_locale
-      session[:locale] = params[:locale] if params[:locale].present?
-      session[:locale] = 'ko' unless %w(ko en ja).include?(session[:locale])
-      I18n.locale = session[:locale] || 'ko'
+      I18n.locale = 'en'
     end
   end
 end
